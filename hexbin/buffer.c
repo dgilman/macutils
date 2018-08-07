@@ -2,10 +2,7 @@
 #include "../util/util.h"
 #include "buffer.h"
 #include "../fileio/wrfile.h"
-
-extern char *malloc();
-extern char *realloc();
-extern void exit();
+#include <stdlib.h>
 
 char *data_fork, *rsrc_fork;
 int data_size, rsrc_size;

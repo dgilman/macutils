@@ -57,11 +57,3 @@ typedef struct fileHdr { /* 58 bytes */
 #define lz4	6
 #define	lz5	7
 #define	lzs	8
-
-extern char *lzh_pointer;
-extern char *lzh_data;
-extern char *lzh_finfo;
-extern int lzh_fsize;
-extern int lzh_kind;
-extern char *lzh_file;
-
