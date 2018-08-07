@@ -1,0 +1,7 @@
+This code is based on the code described in README.ORIG.
+Changes are:
+1.	A program (makecrc) will create the different C source
+	files to do crc calculations.
+2.	The crc calculation method of binhex is added.
+3.	32 bit crc's are added.
+

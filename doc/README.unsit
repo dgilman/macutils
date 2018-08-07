@@ -1,0 +1,46 @@
+/*
+		unsit - Macintosh StuffIt file extractor
+
+			Version 1, for StuffIt 1.31
+
+This program will unpack a Macintosh StuffIt file into separate files.
+The data fork of a StuffIt file contains both the data and resource
+forks of the packed files.  The program will unpack each Mac file into
+separate .data, .rsrc., and .info files that can be downloaded to a
+Mac using macput.  The program is much like the "unpit" program for
+breaking apart Packit archive files.
+
+			***** IMPORTANT *****
+To extract StuffIt files that have been compressed with the Lempel-Ziv
+compression method, unsit pipes the data through the "compress"
+program with the appropriate switches, rather than incorporate the
+uncompression routines within "unsit".  Therefore, it is necessary to
+have the "compress" program on the system and in the search path to
+make "unsit" work.  "Compress" is available from the comp.sources.unix
+archives.
+
+The program syntax is much like unpit and macput/macget, with some added
+options:
+
+	unsit [-rdulvq] stuffit-file.data
+
+The -r and -d flags will cause only the resource and data forks to be
+written.  The -u flag will cause only the data fork to be written and
+to have carriage return characters changed to Unix newline characters.
+The -l flag will make the program only list the files in the StuffIt
+file.  The -v flag causes the program to list the names, sizes, type,
+and creators of the files it is writing.  The -q flag causes it to
+list the name, type and size of each file and wait for a 'y' or 'n'
+for either writing that file or skipping it, respectively.
+
+Some of the program is borrowed from the macput.c/macget.c programs.
+Many, many thanks to Raymond Lau, the author of StuffIt, for including 
+information on the format of the StuffIt archives in the documentation.
+
+	Author: Allan G. Weber
+		weber%brand.usc.edu@oberon.usc.edu
+		...sdcrdcf!usc-oberon!brand!weber
+	Date:   January 15, 1988
+
+*/
+

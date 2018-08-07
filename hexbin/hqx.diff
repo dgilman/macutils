@@ -1,0 +1,35 @@
+*** hqx.c	Mon Mar  9 21:36:57 1992
+--- n.hqx.c	Mon Mar  9 22:07:53 1992
+***************
+*** 108,114 ****
+  void hqx(macname)
+  char *macname;
+  {
+!     int n, normlen;
+      register char *in, *out;
+      register int b6, b8, data, lastc = 0;
+      char state68 = 0, run = 0, linestate, first = 1;
+--- 108,114 ----
+  void hqx(macname)
+  char *macname;
+  {
+!     int n, normlen, c;
+      register char *in, *out;
+      register int b6, b8, data, lastc = 0;
+      char state68 = 0, run = 0, linestate, first = 1;
+***************
+*** 136,141 ****
+--- 136,148 ----
+  	    if((linestate = lookup[*in & 0xff]) == FAIL ||
+  		((linestate == DONE) && !first)) {
+  		break;
++ 	    }
++ 	}
++ 	if(linestate != FAIL && n != normlen && linestate != DONE) {
++ 	    c = fgetc(ifp);
++ 	    (void)ungetc(c, ifp);
++ 	    if(lookup[c] == DONE) {
++ 		linestate = DONE;
+  	    }
+  	}
+  	if(linestate == FAIL || (n != normlen && linestate != DONE)) {

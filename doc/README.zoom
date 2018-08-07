@@ -1,0 +1,101 @@
+Taken from the file plugins.h in the Zoom distribution.
+
+/*
+ * The Zoom archive format is:
+ *
+ * (char) Magic1
+ * (char) Magic2 - or - (char) Magic2B
+ * (char) Magic3
+ * (char) Magic4
+ * 
+ * IF Magic2B was received THEN
+ *		(long) logicalEof /* For multi-file archives * /
+ * END IF
+ * 
+ * <EntryChain>
+ * 
+ * The format of <EntryChain> is a linked list of
+ * EntryInfo, where "next" points to the next logical address
+ * on disk. "next" as 0 means no more entries.
+ *
+ * For a directory, the "creator" field points to the
+ * first file/folder entry inside the directory.
+ *
+ * For a file, IF the "what" field is ZOOM_PLUGIN,
+ * the EntryInfo is followed by a length byte and that
+ * many characters naming the compression engine.
+ * Right after that (or right after the EntryInfo in the
+ * case of uncompressed files or default compressed files)
+ * follows the data fork compressed, followed by the
+ * resource fork compressed.
+ *
+ * Note that there is no "end of compressed data" marker;
+ * your compressor engine will have to figure that out by
+ * itself. You could for instance do an ftell before
+ * compressing; writing a (long)0 and then write your
+ * compressed data, seek back and write the actual length.
+ *
+ * Note that new entries always are added last in the file,
+ * so you need not worry about overrunning anything else.
+ */
+
+/*
+ * The default compressor in Zoom is the same as used in
+ * "better" compression mode in ZOO 2.10. A Zoo extractor
+ * or convertor could parse the ZOO header format, and use
+ * the built-in engine for "lzh" compressed files.
+ *
+ * The simplest way to do this is to call SetEngine(-1) and
+ * call Encode / Decode. -1 is the default compressor, 0 is
+ * the null compressor (fork copy)
+ *
+ * Likewise, a UNIX zoom packer/unpacker could use the source
+ * for zoo 2.10 functions "lzh_encode" and "lzh_decode"
+ * (they're wrappers) for compression.
+ */
+
+/*
+ * This "EntryInfo" is presently also a file header.
+ * Some fields may be non-obvious. Don't use these.
+ * For instance, "comment" is currently unsupported,
+ * and should be left as 0
+ */
+#ifndef ZOOM_TYPES
+typedef enum zoomWhatType {
+	ZOOM_NOTHING , ZOOM_FILE , ZOOM_UCFILE , ZOOM_DIR , ZOOM_PLUGIN
+} ZoomWhatType ;
+#define ZOOM_TYPES
+#endif
+
+/*
+ * Remember to fill in "hlen" correctly as well. When reading a header,
+ * Zoom checks with this field to see if it should skip some more data
+ * or seek back a little, so as to make future field additions at the
+ * end possible. You should NOT add your own fields to this structure.
+ */
+typedef struct EntryInfo {
+
+	/* "what" is a ZoomWhatType */
+	char			what ;			/* Negative if deleted */
+	unsigned char	hlen ;			/* Header length */
+	unsigned short	boolFlags ;		/* Boolean flags */
+	long			next ;			/* Next entry */
+
+	long			complen ;		/* Length of compressed data */
+	long			compdata ;		/* Data fork portion of compressed data - for dirs, number of entries */
+	long			uclen ;			/* Length of uncompressed entry */
+	long			ucdata ;		/* Data fork part of uncompressed */
+
+	long			type ;			/* File type */
+	long			creator ;		/* File creator - for dir, offset of file */
+	long			mdate ;			/* Modification date */
+	long			comment ;		/* Comment offset */
+	short			flags ;			/* Macintosh file flags */
+
+	short			dataCrc ;		/* Data fork crc */
+	short			resCrc ;		/* Resource fork crc */
+
+	unsigned char	name [ 32 ] ;	/* File/Dir name */
+
+} EntryInfo ;
+

@@ -1,0 +1,18 @@
+/*
+ * 
+ * Here is the source for the current incarnation of macput . . . .
+ * It is compatible with the 1.1 Release version of MacTerminal,
+ * though in case you still need to use the -0.15X version, there's
+ * the "-o" option to provide compatibility.  Versions 0.5 and 0.9
+ * have a bug in the record checksum calculation which will break
+ * file transfers, so 1.1 is recommended.
+ * 
+ * Please pass any improvements/bug fixes on to me, and
+ * if you know of any good protocols for use on a flow-controlled
+ * line, let me know.
+ * 
+ * 	Dave Johnson
+ * 	ddj%brown@csnet-relay.arpa
+ * 	Brown University Computer Science
+ * 
+*/

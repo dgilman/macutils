@@ -1,0 +1,14 @@
+/*
+ * macget -- receive file from macintosh using xmodem protocol
+ * Dave Johnson, Brown University Computer Science
+ *
+ * (c) 1984 Brown University 
+ * may be used but not sold without permission
+ *
+ * created ddj 5/22/84 
+ * revised ddj 6/29/84 -- added [-rdu] options
+ * revised ddj 7/16/84 -- protocol changes for MacTerminal Beta Version 0.5X
+ * revised ddj 7/31/84 -- pre-4.2 signal bugs fixed in timedout()
+ * revised ddj 11/7/84 -- renamed send_sync() -> get_sync()
+ * revised lra 1/01/87 -- multiple file uploads added (VersTerm compatible)
+ */

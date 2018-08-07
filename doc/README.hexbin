@@ -1,0 +1,31 @@
+The comment for the predecessor of hexbin.
+
+/*
+ * xbin -- unpack BinHex format file into suitable
+ * format for downloading with macput
+ * Dave Johnson, Brown University Computer Science
+ *
+ * (c) 1984 Brown University
+ * may be used but not sold without permission
+ *
+ * created ddj 12/16/84
+ * revised ddj 03/10/85 -- version 4.0 compatibility, other minor mods
+ * revised ddj 03/11/85 -- strip LOCKED bit from m_flags
+ * revised ahm 03/12/85 -- System V compatibility
+ * revised dba 03/16/85 -- (Darin Adler, TMQ Software)  4.0 EOF fixed,
+ *			   4.0 checksum added
+ * revised ddj 03/17/85 -- extend new features to older formats: -l, stdin
+ * revised ddj 03/24/85 -- check for filename truncation, allow multiple files
+ * revised ddj 03/26/85 -- fixed USG botches, many problems w/multiple files
+ * revised jcb 03/30/85 -- (Jim Budler, amdcad!jimb), revised for compatibility
+ *			   with 16-bit int machines
+ * revised dl  06/16/85 -- (Dan LaLiberte, liberte@uiucdcs) character
+ *			   translation speedup
+ * revised ddj 09/30/85 -- fixed problem with run of RUNCHAR
+ * revised gvr 11/15/86 -- speed-up: rewrote .hqx decoding (mcvax!guido)
+ * revised jwm 04/26/88 -- now recognizes "(Convert with" as a starting line
+ *		      -- the widely-used Stuffit uses this as a header
+ * revised dtw ../../89 -- hqx format will skip garbage lines; undoes some of
+ *			-- gvr's work.  will now also recognize .dl format.
+ */
+

@@ -1,0 +1,483 @@
+This is version 2.0b3 of macutil (22-OCT-1992).
+
+This package contains the following utilities:
+	macunpack
+	hexbin
+	macsave
+	macstream
+	binhex
+	tomac
+	frommac
+
+Requirements:
+a.  Of course a C compiler.
+b.  A 32-bit machine with large memory (or at least the ability to 'malloc'
+    large chunks of memory).  For reasons of efficiency and simplicity the
+    programs work 'in-core', also many files are first read in core.
+    If somebody can take the trouble to do it differently, go ahead!
+    There are also probably in a number of places implicit assumptions that
+    an int is 32 bits.  If you encounter such occurrences feel free to
+    notify me.
+c.  A Unix (tm) machine, or something very close.  There are probably quite
+    a lot of Unix dependencies.  Also here, if you have replacements, feel
+    free to send comments.
+d.  This version normally uses the 'mkdir' system call available on BSD Unix
+    and some versions of SysV Unix.  You can change that, see the makefile for
+    details.
+
+File name translation:
+
+The programs use a table driven program to do Mac filename -> Unix filename
+translation.  When compiled without further changes the translation is as
+follows:
+    Printable ASCII characters except space and slash are not changed.
+    Slash and space are changed to underscore, as are all characters that
+    do not fall in the following group.
+    Accented letters are translated to their unaccented counterparts.
+If your system supports the Latin-1 character set, you can change this
+translation scheme by specifying '-DLATIN1' for the 'CF' macro in the
+makefile.  This will translate all accented letters (and some symbols)
+to their Latin-1 counterpart.  This feature is untested (I do not have
+access to systems that cater for Latin-1), so use with care.
+Future revisions of the program will have user settable conversions.
+
+Another feature of filename translation is that when the -DNODOT flag is
+specified in the CF macro an initial period will be translated to underscore.
+
+MacBinary stream:
+
+Most programs allow MacBinary streams as either input or output.  A
+MacBinary stream is a series of files in MacBinary format pasted
+together.  Embedded within a MacBinary stream can be information about
+folders.  So a MacBinary stream can contain all information about a
+folder and its constituents.
+
+Appleshare support:
+
+Optionally the package can be compiled for systems that support the sharing
+of Unix and Mac filesystems.  The package supports AUFS (AppleTalk Unix File
+Server) from CAP (Columbia AppleTalk Package) and AppleDouble (from Apple).
+It will not support both at the same time.  Moreover this support requires
+the existence of the 'mkdir' system call.  And finally, as implemented it
+probably will work on big-endian BSD compatible systems.  If you have a SysV
+system with restricted filename lengths you can get problems.  I do not know
+also whether the structures are stored native or Apple-wise on little-endian
+systems.  And also, I did not test it fully; having no access to either AUFS
+or AppleDouble systems.
+
+Acknowledgements:
+a.  Macunpack is for a large part based on the utilities 'unpit' and 'unsit'
+    written by:
+	Allan G. Weber
+	weber%brand.usc.edu@oberon.usc.edu
+    (wondering whether that is still valid!).  I combined the two into a
+    single program and did a lot of modification.  For information on the
+    originals, see the files README.unpit and README.unsit.
+b.  The crc-calculating routines are based on a routine originally written by:
+	Mark G. Mendel
+	UUCP: ihnp4!umn-cs!hyper!mark
+    (this will not work anymore for sure!).  Also here I modified the stuff
+    and expanded it, see the files README.crc and README.crc.orig.
+c.  LZW-decompression is taken from the sources of compress that are floating
+    around.  Probably I did not use the most efficient version, but this
+    program was written to get it done.  The version I based it on (4.0) is
+    authored by:
+	Steve Davies            (decvax!vax135!petsd!peora!srd)
+	Jim McKie               (decvax!mcvax!jim)  (Hi Jim!)
+	Joe Orost               (decvax!vax135!petsd!joe)
+	Spencer W. Thomas       (decvax!harpo!utah-cs!utah-gr!thomas)
+	Ken Turkowski           (decvax!decwrl!turtlevax!ken)
+	James A. Woods          (decvax!ihnp4!ames!jaw)
+    I am sure those e-mail addresses also will not work!
+d.  Optional AUFS support comes from information supplied by:
+	Casper H.S. Dik
+	University of Amsterdam
+	Kruislaan  409
+	1098 SJ  Amsterdam
+	Netherlands
+
+	phone: +31205922022
+	email: casper@fwi.uva.nl
+    This is an e-mail address that will workm but the address and phone
+    number ar no longer valid.
+    See the makefile.
+    Some caveats are applicable:
+    1.  I did not fully test it (we do not use it).  But the unpacking
+	appears to be correct.  Anyhow, as the people who initially compile
+	it and use it will be system administrators I am confident they are
+	able to locate bugs!  (What if an archive contains a Macfile with
+	the name .finderinfo or .resource?  I have had two inputs for AUFS
+	support [I took Caspers; his came first], but both do not deal with
+	that.  Does CAP deal with it?)  Also I have no idea whether this
+	version supports it under SysV, so beware.
+    2.	From one of the README's supplied by Casper:
+	    Files will not appear in an active folder, because Aufs doesn't like
+	    people working behind it's back.
+	    Simply opening and closing the folder will suffice.
+	Appears to be the same problem as when you are unpacking or in some
+	other way creating files in a folder open to multifinder.  I have seen
+	bundle bits disappear this way.  So if after unpacking you see the
+	generic icon; check whether a different icon should appear and check
+	the bundle bit.
+	    The desktop isn't updated, but that doesn't seem to matter. 
+	I dunno, not using it.
+e.  Man pages are now supplied.  The base was provided by:
+	Douglas Siebert
+	ISCA
+	dsiebert@icaen.uiowa.edu
+f.  Because of some problems the Uncompactor has been rewritten, it is now
+    based on sources from the dearchiver unzip (of PC fame).  Apparently the
+    base code is by:
+	Samuel H. Smith
+    I have no further address available, but as soon as I find a better
+    attribution, I will include it.
+g.  UnstuffIt's LZAH code comes from lharc (also of PC fame) by:
+	Haruhiko Okumura,
+	Haruyasu Yoshizaki,
+	Yooichi Tagawa.
+h.  Zoom's code comes from information supplied by Jon W{tte
+    (d88-jwa@nada.kth.se).  The Zoo decompressor is based on the routine
+    written by Rahul Dhesi (dhesi@cirrus.COM).  This again is based on
+    code by Haruhiko Okumura.  See also the file README.zoom.
+i.  MacLHa's decompressors are identical to the ones mentioned in g and h.
+j.  Most of hexbin's code is based on code written/modified by:
+	Dave Johnson, Brown University Computer Science
+	Darin Adler, TMQ Software
+	Jim Budler, amdcad!jimb
+	Dan LaLiberte, liberte@uiucdcs
+	ahm (?)
+	Jeff Meyer, John Fluke Company
+	Guido van Rossum, guido@cwi.nl (Hi!)
+    (most of the e-mail addresses will not work, the affiliation may also
+    be incorrect by now.)  See also the file README.hexbin.
+k.  The dl code in hexbin comes is based on the original distribution of
+    SUMacC.
+l.  The mu code in hexbin is a slight modification of the hcx code (the
+    compressions are identical).
+m.  The MW code for StuffIt is loosely based on code by Daniel H. Bernstein
+    (brnstnd@acf10.nyu.edu).
+n.  Tomac and frommac are loosely based on the original macput and macget
+    by (the e-mail address will not work anymore):
+	Dave Johnson
+	ddj%brown@csnet-relay.arpa
+	Brown University Computer Science
+
+-------------------------------------------------------------------------------
+Macunpack will unpack PackIt, StuffIt, Diamond, Compactor/Compact Pro, most
+StuffItClassic/StuffItDeluxe, and all Zoom and LHarc/MacLHa archives, and
+archives created by later versions of DiskDoubler.
+Also it will decode files created by BinHex5.0, MacBinary, UMCP,
+Compress It, ShrinkToFit, MacCompress, DiskDoubler and AutoDoubler.
+
+(PackIt, StuffIt, Diamond, Compactor, Compact/Pro, Zoom and LHarc/MacLHa are
+archivers written by respectively: Harry R. Chesley, Raymond Lau, Denis Sersa,
+Bill Goodman, Jon W{tte* and Kazuaki Ishizaki.  BinHex 5.0, MacBinary and
+UMCP are by respectively: Yves Lempereur, Gregory J. Smith, Information
+Electronics.  ShrinkToFit is by Roy T. Hashimoto, Compress It by Jerry
+Whitnell, and MacCompress, DiskDoubler and AutoDoubler are all by
+Lloyd Chambers.)
+
+* from his signature:
+	Jon W{tte - Yes, that's a brace - Damn Swede.
+Actually it is an a with two dots above; some (German inclined) people
+refer to it (incorrectly) as a-umlaut.
+
+It does not deal with:
+a.  Password protected archives.
+b.  Multi-segment archives.
+c.  Plugin methods for Zoom.
+d.  MacLHa archives not packed in MacBinary mode (the program deals very
+    poorly with that!).
+
+Background:
+There are millions of ways to pack files, and unfortunately, all have been
+implemented one way or the other.  Below I will give some background
+information about the packing schemes used by the different programs
+mentioned above.  But first some background about compression (I am no
+expert, more comprehensive information can be found in for instance:
+Tomothy Bell, Ian H. Witten and John G. Cleary, Modelling for Text
+Compression, ACM Computing Surveys, Vol 21, No 4, Dec 1989, pp 557-591).
+
+Huffman encoding (also called Shannon-Fano coding or some other variation
+    of the name).  An encoding where the length of the code for the symbols
+    depends on the frequency of the symbols.  Frequent symbols have shorter
+    codes than infrequent symbols.  The normal method is to first scan the
+    file to be compressed, and to assign codes when this is done (see for
+    instance: D. E. Knuth, the Art of Computer Programming).  Later methods
+    have been designed to create the codes adaptively; for a survey see:
+    Jeremy S. Vetter, Design and Analysis of Dynamic Huffman Codes, JACM,
+    Vol 34, No 4, Oct 1987, pp 825-845.
+LZ77: The first of two Ziv-Lempel methods.  Using a window of past encoded
+    text, output consists of triples for each sequence of newly encoded
+    symbols: a back pointer and length of past text to be repeated and the
+    first symbol that is not part of that sequence.  Later versions allowed
+    deviation from the strict alternation of pointers and uncoded symbols
+    (LZSS by Bell).  Later Brent included Huffman coding of the pointers
+    (LZH).
+LZ78: While LZ77 uses a window of already encoded text as a dictionary,
+    LZ78 dynamically builds the dictionary.  Here again pointers are strictly
+    alternated with unencoded new symbols.  Later Welch (LZW) managed to
+    eliminate the output of unencoded symbols.  This algorithm is about
+    the same as the one independently invented by Miller and Wegman (MW).
+    A problem with these two schemes is that they are patented.  Thomas
+    modified LZW to LZC (as used in the Unix compress command).  While LZ78
+    and LZW become static once the dictionary is full, LZC has possibilities
+    to reset the dictionary.  Many LZC variants are in use, depending on the
+    size of memory available.  They are distinguished by the maximum number
+    of bits that are used in a code.
+A number of other schemes are proposed and occasionally used.  The main
+advantage of the LZ type schemes is that (especially) decoding is fairly fast.
+
+Programs background:
+
+Plain programs:
+BinHex 5.0:
+    Unlike what its name suggest this is not a true successor of BinHex 4.0.
+    BinHex 5.0 takes the MacBinary form of a file and stores it in the data
+    fork of the newly created file.
+    Although BinHex 5.0 does not create BinHex 4.0 compatible files, StuffIt
+    will give the creator type of BinHex 5.0 (BnHq) to its binhexed files,
+    rather than the creator type of BinHex 4.0 (BNHQ).  The program knows
+    about that.
+MacBinary:
+    As its name suggests, it does the same as BinHex 5.0.
+UMCP:
+    Looks similar, but the file as stored by UMCP is not true MacBinary.
+    Size fields are modified, the result is not padded to a multiple of 128,
+    etc.  Macunpack deals with all that, but until now is not able to
+    correctly restore the finder flags of the original file.  Also, UMCP
+    created files have type "TEXT" and creator "ttxt", which can create a
+    bit of confusion.  Macunpack will recognize these files only if the
+    creator has been modified to "UMcp".
+
+Compressors:
+ShrinkToFit:
+    This program uses a Huffman code to compress.  It has an option (default
+    checked for some reason), COMP, for which I do not yet know the
+    meaning.  Compressing more than a single file in a single run results
+    in a failure for the second and subsequent files.
+Compress It:
+    Also uses a Huffman code to compress.
+MacCompress:
+    MacCompress has two modes of operation, the first mode is (confusingly)
+    MacCompress, the second mode is (again confusingly) UnixCompress.  In
+    MacCompress mode both forks are compressed using the LZC algorithm.
+    In UnixCompress mode only the data fork is compressed, and some shuffling
+    of resources is performed.  Upto now macunpack only deals with MacCompress
+    mode.  The LZC variant MacCompress uses depends on memory availability.
+    12 bit to 16 bit LZC can be used.
+
+Archivers:
+ArcMac:
+    Nearly PC-Arc compatible.  Arc knows 8 compression methods, I have seen
+    all of them used by ArcMac, except the LZW techniques.  Here they are:
+    1:	No compression, shorter header
+    2:	No compression
+    3:	(packing) Run length encoding
+    4:	(squeezing) RLE followed by Huffman encoding
+    5:	(crunching) LZW
+    6:	(crunching) RLE followed by LZW
+    7:	(crunching) as the previous but with a different hash function
+    8:	(crunching) RLE followed by 12-bit LZC
+    9:	(squashing) 13-bit LZC
+PackIt:
+    When archiving a file PackIt either stores the file uncompressed or
+    stores the file Huffman encoded.  In the latter case both forks are
+    encoded using the same Huffman tree.
+StuffIt and StuffIt Classic/Deluxe:
+    These have the ability to use different methods for the two forks of a
+    file.  The following standard methods I do know about (the last three
+    are only used by the Classic/Deluxe version 2.0 of StuffIt):
+    0:	No compression
+    1:	Run length encoding
+    2:	14-bit LZC compression
+    3:	Huffman encoding
+    5:	LZAH: like LZH, but the Huffman coding used is adaptive
+    6:	A Huffman encoding using a fixed (built-in) Huffman tree
+    8:	A MW encoding
+Diamond:
+    Uses a LZ77 like frontend plus a Fraenkel-Klein like backend (see
+    Apostolico & Galil, Combinatorial Algorithms on Words, pages 169-183).
+Compactor/Compact Pro:
+    Like StuffIt, different encodings are possible for data and resource fork.
+    Only two possible methods are used:
+    0:	Run length encoding
+    1:	RLE followed by some form of LZH
+Zoom:
+    Data and resource fork are compressed with the same method.  The standard
+    uses either no compression or some form of LZH
+MacLHa:
+    Has two basic modes of operation, Mac mode and Normal mode.  In Mac mode
+    the file is archived in MacBinary form.  In normal mode only the forks
+    are archived.  Normal mode should not be used (and can not be unpacked
+    by macunpack) as all information about data fork size/resource fork size,
+    type, creator etc. is lost.  It knows quite a few methods, some are
+    probably only used in older versions, the only methods I have seen used
+    are -lh0-, -lh1- and -lh5-.  Methods known by MacLHa:
+    -lz4-:  No compression
+    -lz5-:  LZSS
+    -lzs-:  LZSS, another variant
+    -lh0-:  No compression
+    -lh1-:  LZAH (see StuffIt)
+    -lh2-:  Another form of LZAH
+    -lh3-:  A form of LZH, different from the next two
+    -lh4-:  LZH with a 4096 byte buffer (as far as I can see the coding in
+	    MacLHa is wrong)
+    -lh5-:  LZH with a 8192 byte buffer
+DiskDoubler:
+    The older version of DiskDoubler is compatible with MacCompress.  It does
+    not create archives, it only compresses files.  The newer version (since
+    3.0) does both archiving and compression.  The older version uses LZC as
+    its compression algorithm, the newer version knows a number of different
+    compression algorithms.  Many (all?) are algorithms used in other
+    archivers.  Probably this is done to simplify conversion from other formats
+    to DiskDoubler format archives.  I have seen actual DiskDoubler archives
+    that used methods 0, 1 and 8:
+    0:	No compression
+    1:	LZC
+    2:	unknown
+    3:	RLE
+    4:	Huffman (or no compression)
+    5:	unknown
+    6:	unknown
+    7:	An improved form of LZSS
+    8:	Compactor/Compact Pro compatible RLE/LZH or RLE only
+    9:	unknown
+    The DiskDoubler archive format contains many subtle twists that make it
+    difficult to properly read the archive (or perhaps this is on purpose?).
+
+Naming:
+Some people have complained about the name conflict with the unpack utility
+that is already available on Sys V boxes.  I had forgotten it, so there
+really was a problem.  The best way to solve it was to trash pack/unpack/pcat
+and replace it by compress/uncompress/zcat.  Sure, man uses it; but man uses
+pcat, so you can retain pcat.  If that was not an option you were able to feel
+free to rename the program.  But finally I relented.  It is now macunpack.
+
+When you have problems unpacking an archive feel free to ask for information.
+I am especially keen when the program detects an unknown method.  If you
+encounter such an archive, please, mail a 'binhexed' copy of the archive
+to me so that I can deal with it.  Password protected archives are (as
+already stated) not implemented.  I do not have much inclination to do that.
+Also I feel no inclination to do multi-segment archives.
+
+-------------------------------------------------------------------------------
+Hexbin will de-hexify files created in BinHex 4.0 compatible format (hqx)
+but also the older format (dl, hex and hcx).  Moreover it will uudecode
+files uuencoded by UUTool (the only program I know that does UU hexification
+of all Mac file information).
+
+There are currently many programs that are able to create files in BinHex 4.0
+compatible format.  There are however some slight differences, and most
+de-hexifiers are not able to deal with all the variations.  This program is
+very simple minded.  First it will intuit (based on the input) whether the
+file is in dl, hex, hcx or hqx format.  Next it will de-hexify the file.
+When the format is hqx, it will check whether more files follow, and continue
+processing.  So you can catenate multiple (hqx) hexified files together and
+feed them as a single file to hexbin.  Also hexbin does not mind whether lines
+are separated by CR's, LF's or combinations of the two.  Moreover, it will
+strip all leading, trailing and intermediate garbage introduced by mailers
+etc.  Next, it does not mind if a file is not terminated by a CR or an LF
+(as StuffIt 1.5.1 and earlier did), but in that case a second file is not
+allowed to follow it.  Last, while most hexifiers output lines of equal length,
+some do not.  Hexbin will deal with that, but there are some caveats; see the
+-c option in the man page.
+
+Background:
+
+dl format:
+    This was the first hexified format used.  Programs to deal with it came
+    from SUMacC.  This format only coded resource forks, 4 bits in a byte.
+hex format:
+    I think this is the first format from Yves Lempereur.  Like dl format,
+    it codes 4 bits in a byte, but is able to code both resource and
+    data fork.  Is it BinHex 2.0?
+hcx format:
+    A compressing variant of hex format.  Codes 6 bits in a byte.
+    Is it BinHex 3.0?
+hqx format:
+    Like hcx, but using a different coding (possibly to allow for ASCII->EBCDIC
+    and EBCDIC->ASCII translation, which not always results in an identical
+    file).  Moreover this format also encodes the original Mac filename.
+mu format:
+    The conversion can be done by the UUTool program from Octavian Micro
+    Development.  It encodes both forks and also some finder info.  You will
+    in general not use this with uudecode on non Mac systems, with uudecode
+    only the data fork will be uudecoded.  UU hexification is well known (and
+    fairly old) in Unix environments.  Moreover it has been ported to lots of
+    other systems.
+-------------------------------------------------------------------------------
+Macsave reads a MacBinary stream from standard input and writes the
+files according to the options.
+-------------------------------------------------------------------------------
+Macstream reads files from the Unix host and will output a MacBinary stream
+containing all those files together with information about the directory
+structure.
+-------------------------------------------------------------------------------
+Binhex will read a MacBinary stream, or will read files/directories as
+indicated on the command line, and will output all files in binhexed (.hqx)
+format.  Information about the directory structure is lost.
+-------------------------------------------------------------------------------
+Tomac will transmit a MacBinary stream, or named files to the Mac using
+the XMODEM protocol.
+-------------------------------------------------------------------------------
+Frommac will receive one or more files from the Mac using the XMODEM protocol.
+-------------------------------------------------------------------------------
+This is an ongoing project, more stuff will appear.
+
+All comments are still welcome.  Thanks for the comments I already received.
+
+dik t. winter, amsterdam, nederland
+email: dik@cwi.nl
+
+--
+Note:
+In these programs all algorithms are implemented based on publicly available
+software to prevent any claim that would prevent redistribution due to
+Copyright.  Although parts of the code would indeed fall under the Copyright
+by the original author, use and redistribution of all such code is explicitly
+allowed.  For some parts of it the GNU software license does apply.
+--
+Appendix.
+
+BinHex 4.0 compatible file creators:
+
+Type	Creator		Created by
+
+"TEXT"	"BthX"		BinHqx
+"TEXT"	"BNHQ"		BinHex
+"TEXT"	"BnHq"		StuffIt and StuffIt Classic
+"TEXT"	"ttxt"		Compactor
+
+Files recognized by macunpack:
+
+Type	Creator		Recognized as
+
+"APPL"	"DSEA"		"DiskDoubler"		Self extracting
+"APPL"	"EXTR"		"Compactor"		Self extracting
+"APPL"	"Mooz"		"Zoom"			Self extracting
+"APPL"	"Pack"		"Diamond"		Self extracting
+"APPL"	"arc@"		"ArcMac"		Self extracting (not yet)
+"APPL"	"aust"		"StuffIt"		Self extracting
+"ArCv"	"TrAS"		"AutoSqueeze"				(not yet)
+"COMP"	"STF "		"ShrinkToFit"
+"DD01"	"DDAP"		"DiskDoubler"
+"DDAR"	"DDAP"		"DiskDoubler"
+"DDF."	"DDAP"		"DiskDoubler" (any fourth character)
+"DDf."	"DDAP"		"DiskDoubler" (any fourth character)
+"LARC"	"LARC"		"MacLHa (LHARC)"
+"LHA "	"LARC"		"MacLHa (LHA)"
+"PACT"	"CPCT"		"Compactor"
+"PIT "	"PIT "		"PackIt"
+"Pack"	"Pack"		"Diamond"
+"SIT!"	"SIT!"		"StuffIt"
+"SITD"	"SIT!"		"StuffIt Deluxe"
+"Smal"	"Jdw "		"Compress It"
+"TEXT"	"BnHq"		"BinHex 5.0"
+"TEXT"	"GJBU"		"MacBinary 1.0"
+"TEXT"	"UMcp"		"UMCP"
+"ZIVM"	"LZIV"		"MacCompress(M)"
+"ZIVU"	"LZIV"		"MacCompress(U)"			(not yet)
+"mArc"	"arc*"		"ArcMac"				(not yet)
+"zooM"	"zooM"		"Zoom"
+

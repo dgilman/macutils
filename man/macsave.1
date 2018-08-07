@@ -1,0 +1,78 @@
+.TH MACSAVE L "October 22, 1992"
+.UC
+.SH NAME
+macsave \- Save Mac files read from standard input
+.SH SYNOPSIS
+.B macsave
+[
+.B \- options
+]
+.br
+.SH DESCRIPTION
+.I macsave
+reads a sequence of Macintosh MacBinary files from standard input and writes
+the files it contains subject to the
+.I options
+specified.
+.SH OPTIONS
+In the absence of any options,
+.I macsave
+reads standard input and silently writes the file(s) it contains
+in MacBinary format, giving the output files ".bin" extensions and
+placing them in the current working directory.
+Subdirectories are created for embedded folders.
+.TP
+.B \-3 
+Write files in fork format (.info, .data and .rsrc files.)
+.TP
+.B \-f 
+As -3, but empty data and rsrc files are not created.
+.TP
+.B \-r
+Write resource forks only (.rsrc files.)
+.TP
+.B \-d
+Write data forks only (.data files.)
+.TP
+.B \-u
+As -d, but the codes for CR and LF are interchanged, the filename extension
+is .text.
+.TP
+.B \-U
+As -u, but there is no filename extension.
+.TP
+.B \-a
+Write files in AppleShare format.
+This option is only valid if the program is compiled with support
+for some form of AppleShare.
+The current directory must be a valid AppleShare folder.
+.TP
+.B \-s
+Write extracted files to standard output in MacBinary format.
+.TP
+.B \-l
+List every file extracted (and every directory/folder created etc.)
+.TP
+.B \-v
+Like -l, but more verbose (implies -l.)
+.TP
+.B \-i
+Do not extract, give information only (implies -l.)
+.TP
+.B \-q
+Ask the user for every file/folder whether it should be extracted
+(implies -l.)
+.TP
+.B \-V
+Gives the patchlevel of the program, and other information.
+Other options are ignored and the program quits immediately.
+.TP
+.B \-H
+Give short information about the options.
+Other options are ignored and the program quits immediately.
+.SH BUGS
+As this is a beta release, there may still be some problems.
+.SH SEE ALSO
+macutil(1)
+.SH AUTHOR
+Dik T. Winter, CWI, Amsterdam, The Netherlands (dik@cwi.nl)

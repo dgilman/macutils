@@ -1,0 +1,92 @@
+Preliminary info about the Unix scanner.
+----------------------------------------
+
+This file states mostly how to use it, it is not yet full documentation.
+
+There are a few utilities in this package that help scanning: macidf,
+macscan, macstream, hexbin and macunpack.  I will give examples of use
+where every use highlights some factilities.
+
+The main program is macscan.  It reads from standard input (NB: no file
+parameters) and will scan the input for offensive stuff.  The input
+consists of a stream of files in MacBinary format, with additional
+information between (about Unix file name, Archive/Packed file name,
+folder entry/exit in an archive etc.).
+
+To scan a single MacBinary file just do:
+	macscan <file
+This will read the file and macscan will mark everything it does not like.
+Also when macscan detects that it is an archive, it will unpack the archive,
+and recursively so for embedded archives.  When given the opion -l macscan
+will list the contents of the archive during its scan.  When given the
+option -v it will also list all resources found, with type, number,
+name (if defined) and size.
+
+If you have multiple MacBinary files (e.g. a set of MacBinary files in a
+directory tree), you can do the following (supposing the filenames end in
+'.bin'):
+	find directory -name '*.bin' -exec xxx {} \; | macscan
+Where xxx is the following shellscript:
+	#!/bin/sh
+	macidf $1
+	cat $1
+The macidf is needed so that macscan knows the original Unix file name.
+Of course macscan can also get the -l and -v options.
+
+If you have a directory tree with binhexed files, the following is
+appropriate:
+	find directory -name '*.hqx' -exec hexbin -S {} \; | macscan
+The flag -S tells hexbin that filename info for macscan must be included.
+And here again, macscan can have options.  Note: every binhexed file must
+be contained in a single Unix file, unlike mcvert.  But, like mcvert,
+mailheaders and such can preceed and follow the binhexed file, and can
+also be in the middle.
+
+You can of course have compressed binhexed files, in that case:
+	find directory -name '*.hqx.Z' -exec xxx {} \; | macscan
+with xxx the following shellscript:
+	#!/bin/sh
+	macidf $1
+	zcat $1 | hexbin -s
+(Note, lower case s here.  Hexbin has no knowledge about the Unix filename.)
+
+If the directory is an AUFS directory the following can be done:
+	macstream directory | macscan
+Note: in this case it is not yet possible to include the Unix filename in
+the output of macscan.  With the option -l Mac names are listed.
+
+The previous method might also work with AppleDouble directories, but I am
+not sure about that.
+
+-------
+What macscan can at this moment.
+
+It currently uses a subset of Jeff's VirusDetective strings during the scan.
+Not all strings are yet implemented, so not all viruses are already detected.
+
+Moreover, it includes warnings for CDEF 0, WDEF 0 etc. resources, as per
+Zig's suggestion.
+
+Finally, it warns about resources compressed by the resource compressor of
+Ben Haller.
+
+-------
+The status.
+
+This version is preliminary and confidential.  Do not distribute.
+There are probably a number of bugs present, although my testing
+on a Sun (actually an FPS == very fast Sun) worked pretty well.
+Lint does not complain too much ;-).  Also SGI's lint has not
+many problems with it.  Mostly because the difference between
+	(char *)malloc();
+and
+	(void *)malloc();
+etc.  That must be straightened out sometime.
+
+Any bug-reports, suggestions are wellcome.  Please support bug-reports
+with input or somesuch.
+
+dik
+--
+dik t. winter, cwi, kruislaan 413, 1098 sj  amsterdam, nederland
+dik@cwi.nl

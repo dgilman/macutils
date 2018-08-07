@@ -1,0 +1,99 @@
+.TH FROMMAC L "October 22, 1992"
+.UC
+.SH NAME
+frommac \- Receive files from the Macintosh
+.SH SYNOPSIS
+.B frommac
+[
+.B \- options
+]
+.br
+.SH DESCRIPTION
+.I frommac
+receives files from the Macintosh and processes them
+subject to the
+.I options
+specified.
+.SH OPTIONS
+In the absence of any options,
+.I frommac
+receives a single file and stores it
+in MacBinary format, giving the output file ".bin" extensions and
+placing it in the current working directory.
+.TP
+.B \-3 
+Write files in fork format (.info, .data and .rsrc files.)
+.TP
+.B \-f 
+As -3, but empty data and rsrc files are not created.
+.TP
+.B \-r
+Write resource forks only (.rsrc files.)
+.TP
+.B \-d
+Write data forks only (.data files.)
+.TP
+.B \-u
+As -d, but the codes for CR and LF are interchanged, the filename extension
+is .text.
+.TP
+.B \-U
+As -u, but there is no filename extension.
+.TP
+.B \-a
+Write files in AppleShare format.
+This option is only valid if the program is compiled with support
+for some form of AppleShare.
+The current directory must be a valid AppleShare folder.
+.TP
+.B \-s
+Write received files to standard output in MacBinary format.
+.TP
+.B \-l
+List every file received.
+.TP
+.B \-m
+Receive multiple files.
+Entering ^X (CNTRL-X) after the last file will terminate the program.
+.TP
+.B \-x
+Use the XMODEM protocol for transmission.
+.TP
+.B \-y
+Use the YMODEM protocol for transmission (not yet supported.)
+.TP
+.B \-z
+Use the ZMODEM protocol for transmission (not yet supported.)
+.TP
+.B \-o
+Use the pre-beta version of XMODEM.
+.TP
+.B \-T
+Allow for time-out detection during the protocol.
+Normally you will not need this option because on occasion, when network
+delays do occur, time-out detection interferes with a good transmission.
+Also, when for some reason the connection is broken the program will
+normally receive a hang-up signal and terminate.
+However, in some situations it might be necessary to early detect time-outs
+(because of communication loss or whatever, without loss of connection).
+You should check whether use of this option has profits in your situation
+or not.
+Normally when transmission errors did occur entering a number of times
+^X (CNTRL-X) will gracefully terminate the program.
+.TP
+.B \-V
+Gives the patchlevel of the program, and other information.
+Other options are ignored and the program quits immediately.
+.TP
+.B \-H
+Give short information about the options.
+Other options are ignored and the program quits immediately.
+.SH BUGS
+As this is a beta release, there may still be some problems.
+.SH SEE ALSO
+macutil(1)
+.SH AUTHOR
+Dik T. Winter, CWI, Amsterdam, The Netherlands (dik@cwi.nl)
+.sp 1
+Parts of the code are based on codes from:
+Dave Johnson.

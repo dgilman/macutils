@@ -1,0 +1,62 @@
+/*
+ *	@(#)unpit.c	1.2	(CWI)	87/11/05
+ */
+
+/*
+
+		unpit - Macintosh PackIt file unpacker
+
+		Version 2, for PackIt II
+
+This program will unpack a Macintosh PackIt file into separate files.  The
+data fork of a PackIt file contains both the data and resource forks of the
+packed files.  The program will unpack each Mac file into separate .data,
+.rsrc., and .info files that can be downloaded to a Mac using macput.
+
+The program syntax is much like macput/macget:
+
+	unpit [-rdu] packit-file.data
+
+The  -r and -d flags will cause only the resource and data forks to be
+written.  The -u flag will cause only the data fork to be written and
+to have carriage return characters changed to Unix newline characters.
+
+Some of the program is borrowed from the macput.c/macget.c programs.
+
+	Author: Allan G. Weber, (Weber%Brand@USC-ECL)		
+	Date:   September 30, 1985
+	Revised: January 24, 1986 - added CRC checking
+		 March 25, 1986 - support compressed mode of PackIt II,
+				  check for illegal Unix file names
+
+*/
+
+/* There is some confusion as to what to do with the "inited" flag in the
+   finder info bytes that are in the header of each file in the packit file.
+   If this flag bit is copied to the .info file, it seems to confuse
+   MacTerminal into placing the file icons in the upper left corner of the
+   window on top of each other.  Setting this bit to zero in the .info file
+   seems to fix that problem but may cause others.  I haven't been able to
+   find any .info files that have this flag set so making it zero may be OK.
+   Anyway, MacTerminal seems to set the flag when it create the file on the
+   Mac.  The "#define INITED_BUG" can be used to try both settings.  */
+
+/*
+Format of a Packit file:
+
+Repeat the following sequence for each file in the Packit file:
+
+	4 byte identifier ("PMag" = not compressed, "Pma4" = compressed)
+	variable length compression data (if compressed file)
+	92 byte header (see struct pit_header below) *
+	2 bytes CRC number *
+	data fork (length from header) *
+	resource fork (length from header) *
+	2 bytes CRC number *
+
+Last file is followed by the 4 byte Ascii string, "Pend", and then the EOF.
+
+* these are in compressed form if compression is on for the file
+
+*/
+
