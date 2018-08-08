@@ -15,8 +15,8 @@ clean:
 $(CRCC):	makecrc
 	./makecrc
 
-makecrc:	makecrc.o
-	cc -O -o makecrc makecrc.o
+makecrc:	makecrc.c
+	cc -O -o makecrc makecrc.c
 
 arc.o:	arc.c
 ccitt.o:	ccitt.c
