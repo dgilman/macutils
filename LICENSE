@@ -1,0 +1,53 @@
+This package was debianized by Vincent Renardias <vincent@waw.com> on
+Wed, 6 Nov 1996 21:28:45 +0100.
+
+It was downloaded from 
+<ftp://ftp.ibp.fr/pub/linux/sunsite/utils/compress/macutils.tar.gz>
+
+Original Upstream Copyright Notice:
+
+--
+Note:
+In these programs all algorithms are implemented based on publicly available
+software to prevent any claim that would prevent redistribution due to
+Copyright.  Although parts of the code would indeed fall under the Copyright
+by the original author, use and redistribution of all such code is explicitly
+allowed.  For some parts of it the GNU software license does apply.
+--
+
+Clarified Copyright Notice:
+--
+Almost all of the code is either created by me from scratch or loosely
+based on *algorithms* that are publicly available.  Most of the algorithms
+are actually found by reverse engineering and interpretation of the results.
+In some cases the algorithms came from the acknowledged sources, but the
+implementation is my own.
+
+As far as sources are concerned, the only execptions are
+macutil/de_compress.c and macutil/de_lzah.c  They have a clear relation
+with the original source.  de_lzah.c is loosely based on LZSS.C in
+LHarc.  As the file says:
+        4/6/1989 Haruhiko Okumura
+        Use, distribute, and modify this program freely.
+
+[..]
+
+The point where GPL might come in is in the Zoom part (macutil/zma.c),
+but I do not think this is so; the algorithm is found from a file
+mailed to me by the author, which would fall under the GPL, but the
+implementation is completely different.
+
+      - Dik T. Winter <Dik.Winter@cwi.nl> Thu, 22 Feb 2001 13:30:58 +0100
+-- 
+
+Clarified Licensing Terms:
+--
+According to Dutch law it is *not* possible to release something in the
+public domain.  So I might state that but I would not be bound by it...
+Yup, copyright is a mess.  But I indeed do have the copyright, but it may
+be distributed and used for any purpose.
+
+      - Dik T. Winter <Dik.Winter@cwi.nl> Thu, 22 Feb 2001 15:38:37 +0100
+--
+
+The full text of the GPL is available in /usr/share/common-licenses/GPL.
