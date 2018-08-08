@@ -1,3 +1,3 @@
-#define	VERSION		"2.0b3 (22-OCT-1992)"
+#define	VERSION		"2.1 (07-AUG-2017)"
 #define PATCHLEVEL	0
 
